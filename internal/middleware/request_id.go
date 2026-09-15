@@ -14,6 +14,12 @@ import (
 	"github.com/linuxfoundation/lfx-v2-subscription-service/pkg/log"
 )
 
+// contextKey is a private type for context keys to avoid collisions with other packages.
+type contextKey string
+
+// requestIDKey is the context key for the request ID value.
+const requestIDKey contextKey = constants.RequestIDHeader
+
 // RequestIDMiddleware injects a request ID into the context and response headers.
 // It reads an existing X-Request-ID header if present, otherwise generates a new UUID.
 func RequestIDMiddleware() func(http.Handler) http.Handler {
@@ -26,7 +32,7 @@ func RequestIDMiddleware() func(http.Handler) http.Handler {
 
 			w.Header().Set(constants.RequestIDHeader, requestID)
 
-			ctx := context.WithValue(r.Context(), constants.RequestIDHeader, requestID)
+			ctx := context.WithValue(r.Context(), requestIDKey, requestID)
 			ctx = log.AppendCtx(ctx, slog.String(constants.RequestIDHeader, requestID))
 
 			next.ServeHTTP(w, r.WithContext(ctx))
