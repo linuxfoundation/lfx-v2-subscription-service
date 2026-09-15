@@ -79,11 +79,6 @@ func OTelConfigFromEnv() OTelConfig {
 	return cfg
 }
 
-// SetupOTelSDK bootstraps the OTel pipeline using environment-based configuration.
-func SetupOTelSDK(ctx context.Context) (func(context.Context) error, error) {
-	return SetupOTelSDKWithConfig(ctx, OTelConfigFromEnv())
-}
-
 // SetupOTelSDKWithConfig bootstraps the OTel pipeline with an explicit config.
 // Call the returned shutdown function for cleanup.
 func SetupOTelSDKWithConfig(ctx context.Context, cfg OTelConfig) (shutdown func(context.Context) error, err error) {
